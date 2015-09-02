@@ -1,0 +1,8 @@
+name = Example data module
+description = Demonstration of separate managed data
+package = other
+core = 6.x
+php = 5.2
+
+dependencies[] = data
+dependencies[] = views

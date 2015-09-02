@@ -1,0 +1,225 @@
+<?php
+/**
+ * @file
+ * example_data.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function example_data_install() {
+  drupal_install_schema('example_data');
+
+  // Adoption of table needed for data module use.
+  data_include('DataTable');
+  $table_obj = DataTable::instance('example_data');
+  $adopted = $table_obj->adopt();
+
+  if ($adopted) {
+    DataTable::clearCaches();
+  }
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function example_data_uninstall() {
+  drupal_uninstall_schema('example_data');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function example_data_schema() {
+  $schema = array();
+
+  // Retailer Master Data.
+  $schema['example_data'] = array(
+    'description' => "Stores retailer information.",
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "Primary key: a unique ID.",
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'description' => "Name of the retailer.",
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Retailer website url.",
+      ),
+      'account_number' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+        'description' => "Retailer sap account number.",
+      ),
+      'service_id' => array(
+        'type' => 'varchar',
+        'length' => '10',
+        'not null' => TRUE,
+        'description' => "Retailer returns service R24,R48.",
+      ),
+      'message' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => FALSE,
+        'description' => "Retailer html message.",
+      ),
+      'most_popular_retailer' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+        'description' => '0 Not most popular , 1 Most popular',
+      ),
+      'address_line1' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Delivery address line 1.",
+      ),
+      'address_line2' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Delivery address line 2.",
+      ),
+      'address_line3' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Delivery address line 3",
+      ),
+      'address_line4' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Delivery address line 4.",
+      ),
+      'town' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Delivery town.",
+      ),
+      'postcode' => array(
+        'type' => 'varchar',
+        'length' => '10',
+        'not null' => FALSE,
+        'description' => "Delivery postcode.",
+      ),
+      'country' => array(
+        'type' => 'varchar',
+        'length' => '10',
+        'not null' => FALSE,
+        'default' => 'GB',
+        'description' => "Delivery country.",
+      ),
+      'email' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'description' => "Retailer reporting email address.",
+      ),
+      'custom_field1' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => FALSE,
+        'description' => "Retailer custom field data serialized.",
+      ),
+      'custom_field2' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => FALSE,
+        'description' => "Retailer custom field data serialized.",
+      ),
+      'logo_id' => array(
+        'type' => 'int',
+        'length' => '10',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => "Retailer logo nid of media content type.",
+      ),
+      'status' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+        'description' => '0 Created , 1 Suspended , 2 Active , 3 Deleted',
+      ),
+      'guid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The unique user ID.',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Creation timestamp.',
+      ),
+      'updated' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'Update timestamp.',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  // Retailer list of return reasons.
+  $schema['example_data_reason'] = array(
+    'description' => 'Retailer reasons for return',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'retailer_id' => array(
+        'description' => 'Retailer id',
+        'type' => 'int',
+        'length' => '10',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'reason' => array(
+        'description' => 'Reason for return',
+        'type' => 'text',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'guid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The unique user ID.',
+      ),
+      'created' => array(
+        'description' => 'Creation timestamp',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+    'foreign keys' => array(
+      'retailer_id_fk' => array(
+        'table' => 'example_data',
+        'columns' => array('retailer_id' => 'id'),
+      ),
+    ),
+  );
+  return $schema;
+}

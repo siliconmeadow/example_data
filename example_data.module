@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file
+ * example_data.module
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function example_data_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'example_data'),
+  );
+}
+/**
+ * Implements hook_menu().
+ */
+function example_data_menu() {
+  $items[] = array();
+
+  return $items;
+}
+
+/**
+ * Implements hook_perm().
+ */
+function example_data_perm() {
+  // return array('access example data retailer');
+}

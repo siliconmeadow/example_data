@@ -26,6 +26,9 @@ function example_data_install() {
  */
 function example_data_uninstall() {
   drupal_uninstall_schema('example_data');
+  // As there is currently no 'un-adopt' function in the data module, this
+  // will do the proper housekeeping.
+  db_query("DELETE FROM {data_tables} WHERE name = 'example_data'");
 }
 
 /**
@@ -34,7 +37,7 @@ function example_data_uninstall() {
 function example_data_schema() {
   $schema = array();
 
-  // Retailer Master Data.
+  // Retailer Data.
   $schema['example_data'] = array(
     'description' => "Stores retailer information.",
     'fields' => array(
@@ -73,13 +76,6 @@ function example_data_schema() {
         'size' => 'medium',
         'not null' => FALSE,
         'description' => "Retailer html message.",
-      ),
-      'most_popular_retailer' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'default' => 0,
-        'not null' => TRUE,
-        'description' => '0 Not most popular , 1 Most popular',
       ),
       'address_line1' => array(
         'type' => 'varchar',
@@ -130,25 +126,6 @@ function example_data_schema() {
         'not null' => FALSE,
         'description' => "Retailer reporting email address.",
       ),
-      'custom_field1' => array(
-        'type' => 'text',
-        'size' => 'medium',
-        'not null' => FALSE,
-        'description' => "Retailer custom field data serialized.",
-      ),
-      'custom_field2' => array(
-        'type' => 'text',
-        'size' => 'medium',
-        'not null' => FALSE,
-        'description' => "Retailer custom field data serialized.",
-      ),
-      'logo_id' => array(
-        'type' => 'int',
-        'length' => '10',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'description' => "Retailer logo nid of media content type.",
-      ),
       'status' => array(
         'type' => 'int',
         'size' => 'tiny',
@@ -156,70 +133,9 @@ function example_data_schema() {
         'not null' => TRUE,
         'description' => '0 Created , 1 Suspended , 2 Active , 3 Deleted',
       ),
-      'guid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The unique user ID.',
-      ),
-      'created' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Creation timestamp.',
-      ),
-      'updated' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'description' => 'Update timestamp.',
-      ),
     ),
     'primary key' => array('id'),
   );
 
-  // Retailer list of return reasons.
-  $schema['example_data_reason'] = array(
-    'description' => 'Retailer reasons for return',
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'retailer_id' => array(
-        'description' => 'Retailer id',
-        'type' => 'int',
-        'length' => '10',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'reason' => array(
-        'description' => 'Reason for return',
-        'type' => 'text',
-        'length' => '255',
-        'not null' => TRUE,
-      ),
-      'guid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The unique user ID.',
-      ),
-      'created' => array(
-        'description' => 'Creation timestamp',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('id'),
-    'foreign keys' => array(
-      'retailer_id_fk' => array(
-        'table' => 'example_data',
-        'columns' => array('retailer_id' => 'id'),
-      ),
-    ),
-  );
   return $schema;
 }

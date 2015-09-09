@@ -1,6 +1,6 @@
 name = Example data module
 description = Demonstration of separate managed data
-package = other
+package = Other
 core = 6.x
 php = 5.2
 

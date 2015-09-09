@@ -25,10 +25,14 @@ function example_data_install() {
  * Implements hook_uninstall().
  */
 function example_data_uninstall() {
+  // The following three lines work with the unadopt method of the data module
+  // which is introduced with this patch:
+  // https://www.drupal.org/node/2565565#comment-10308967.
+  data_include('DataTable');
+  $table_obj = DataTable::instance('example_data');
+  $adopted = $table_obj->unadopt();
+
   drupal_uninstall_schema('example_data');
-  // As there is currently no 'un-adopt' function in the data module, this
-  // will do the proper housekeeping.
-  db_query("DELETE FROM {data_tables} WHERE name = 'example_data'");
 }
 
 /**

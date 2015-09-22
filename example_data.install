@@ -30,7 +30,7 @@ function example_data_uninstall() {
   // https://www.drupal.org/node/2565565#comment-10308967.
   data_include('DataTable');
   $table_obj = DataTable::instance('example_data');
-  $adopted = $table_obj->unadopt();
+  $adopted = $table_obj->disown();
 
   drupal_uninstall_schema('example_data');
 }
